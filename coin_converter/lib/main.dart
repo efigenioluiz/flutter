@@ -36,9 +36,15 @@ class _HomeState extends State<Home> {
   final dolarController = TextEditingController();
   final realController = TextEditingController();
   final euroController = TextEditingController();
-  
+
   double dolar;
   double euro;
+
+  changedFieldDolar(){
+//    print();
+  }
+  changedFieldEuro(){}
+  changedFieldReal(){}
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +81,11 @@ class _HomeState extends State<Home> {
                         size: 150.0,
                         color: Colors.amberAccent,
                       ),
-                      fieldScreen("Real", "R", realController),
+                      fieldScreen("Real", "R", realController, changedFieldReal()),
                       Divider(),
-                      fieldScreen("Dolar", "US", dolarController),
+                      fieldScreen("Dolar", "US", dolarController, changedFieldDolar()),
                       Divider(),
-                      fieldScreen("Euro", "€", euroController),
+                      fieldScreen("Euro", "€", euroController, changedFieldEuro()),
                     ],
                   ),
                 );
@@ -91,7 +97,7 @@ class _HomeState extends State<Home> {
   }
 }
 
-fieldScreen(String coin, String symbol, TextEditingController c) {
+fieldScreen(String coin, String symbol, TextEditingController c, Function f) {
   return TextField(
     decoration: InputDecoration(
       labelText: "$coin",
@@ -102,6 +108,7 @@ fieldScreen(String coin, String symbol, TextEditingController c) {
     keyboardType: TextInputType.number,
     style: TextStyle(color: Colors.amberAccent, fontSize: 25.0),
     controller: c,
+    onChanged: f,
   );
 }
 
