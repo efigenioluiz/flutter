@@ -8,6 +8,16 @@ const request = "https://api.hgbrasil.com/finance?key=865e2b6b";
 void main() {
   runApp(MaterialApp(
     home: Home(),
+    theme: ThemeData(
+        hintColor: Colors.amberAccent,
+        primaryColor: Colors.white,
+        inputDecorationTheme: InputDecorationTheme(
+          enabledBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          focusedBorder:
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
+          hintStyle: TextStyle(color: Colors.amber),
+        )),
 //    theme: ,
   ));
 }
@@ -43,7 +53,7 @@ class _HomeState extends State<Home> {
         builder: (contex, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-            case ConnectionState.none:
+            case ConnectionState.waiting:
               return Center(
                 child: Text(
                   "Loading data ...",
@@ -62,6 +72,7 @@ class _HomeState extends State<Home> {
                 );
               } else {
                 return SingleChildScrollView(
+                  padding: EdgeInsets.all(15.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -70,16 +81,11 @@ class _HomeState extends State<Home> {
                         size: 150.0,
                         color: Colors.amberAccent,
                       ),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: "Reais",
-                          labelStyle: TextStyle(color: Colors.amberAccent),
-                          border: OutlineInputBorder(),
-                          prefixText: "R\$",
-                        ),
-                        style: TextStyle(
-                            color: Colors.amberAccent, fontSize: 25.0),
-                      ),
+                      fieldScreen("Real", "R"),
+                      Divider(),
+                      fieldScreen("Dolar", "US"),
+                      Divider(),
+                      fieldScreen("Euro","€"),
                     ],
                   ),
                 );
@@ -89,4 +95,17 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+}
+fieldScreen(String coin, String symbol){
+  return TextField(
+    decoration: InputDecoration(
+      labelText: "$coin",
+      labelStyle: TextStyle(color: Colors.amberAccent),
+      border: OutlineInputBorder(),
+      prefixText: "$symbol\$",
+    ),
+    keyboardType: TextInputType.number,
+    style: TextStyle(
+        color: Colors.amberAccent, fontSize: 25.0),
+  );
 }
