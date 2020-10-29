@@ -14,8 +14,8 @@ void main() {
         inputDecorationTheme: InputDecorationTheme(
           enabledBorder:
               OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-          focusedBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.amberAccent)),
+          focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.amberAccent)),
           hintStyle: TextStyle(color: Colors.amberAccent),
         )),
 //    theme: ,
@@ -33,9 +33,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-    final dolarController= TextEditingController();
-    final realController= TextEditingController();
-    final euroController= TextEditingController();
+  final dolarController = TextEditingController();
+  final realController = TextEditingController();
+  final euroController = TextEditingController();
+  
+  double dolar;
+  double euro;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +63,8 @@ class _HomeState extends State<Home> {
               if (snapshot.hasError) {
                 return msgScreen("Loading Error ...");
               } else {
+                dolar = snapshot.data["results"]["currencies"]["USD"];
+                euro = snapshot.data["results"]["currencies"]["EUR"];
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(15.0),
                   child: Column(
@@ -70,11 +75,11 @@ class _HomeState extends State<Home> {
                         size: 150.0,
                         color: Colors.amberAccent,
                       ),
-                      fieldScreen("Real", "R"),
+                      fieldScreen("Real", "R", realController),
                       Divider(),
-                      fieldScreen("Dolar", "US"),
+                      fieldScreen("Dolar", "US", dolarController),
                       Divider(),
-                      fieldScreen("Euro","€"),
+                      fieldScreen("Euro", "€", euroController),
                     ],
                   ),
                 );
@@ -85,7 +90,8 @@ class _HomeState extends State<Home> {
     );
   }
 }
-fieldScreen(String coin, String symbol){
+
+fieldScreen(String coin, String symbol, TextEditingController c) {
   return TextField(
     decoration: InputDecoration(
       labelText: "$coin",
@@ -94,11 +100,12 @@ fieldScreen(String coin, String symbol){
       prefixText: "$symbol\$",
     ),
     keyboardType: TextInputType.number,
-    style: TextStyle(
-        color: Colors.amberAccent, fontSize: 25.0),
+    style: TextStyle(color: Colors.amberAccent, fontSize: 25.0),
+    controller: c,
   );
 }
-msgScreen(String msg){
+
+msgScreen(String msg) {
   return Center(
     child: Text(
       msg,
