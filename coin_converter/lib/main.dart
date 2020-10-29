@@ -15,8 +15,8 @@ void main() {
           enabledBorder:
               OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
           focusedBorder:
-              OutlineInputBorder(borderSide: BorderSide(color: Colors.amber)),
-          hintStyle: TextStyle(color: Colors.amber),
+              OutlineInputBorder(borderSide: BorderSide(color: Colors.amberAccent)),
+          hintStyle: TextStyle(color: Colors.amberAccent),
         )),
 //    theme: ,
   ));
@@ -33,8 +33,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-//  double dolar=
-//  double euro=
+    final dolarController= TextEditingController();
+    final realController= TextEditingController();
+    final euroController= TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -54,22 +55,10 @@ class _HomeState extends State<Home> {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
-              return Center(
-                child: Text(
-                  "Loading data ...",
-                  style: TextStyle(color: Colors.amberAccent, fontSize: 25.0),
-                  textAlign: TextAlign.center,
-                ),
-              );
+              return msgScreen("Loading data ...");
             default:
               if (snapshot.hasError) {
-                return Center(
-                  child: Text(
-                    "Loading Error ...",
-                    style: TextStyle(color: Colors.amberAccent, fontSize: 25.0),
-                    textAlign: TextAlign.center,
-                  ),
-                );
+                return msgScreen("Loading Error ...");
               } else {
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(15.0),
@@ -107,5 +96,14 @@ fieldScreen(String coin, String symbol){
     keyboardType: TextInputType.number,
     style: TextStyle(
         color: Colors.amberAccent, fontSize: 25.0),
+  );
+}
+msgScreen(String msg){
+  return Center(
+    child: Text(
+      msg,
+      style: TextStyle(color: Colors.amberAccent, fontSize: 25.0),
+      textAlign: TextAlign.center,
+    ),
   );
 }
