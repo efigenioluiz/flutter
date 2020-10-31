@@ -40,11 +40,41 @@ class _HomeState extends State<Home> {
   double dolar;
   double euro;
 
-  changedFieldDolar(){
-//    print();
+  void _clearAll() {
+    realController.text = "";
+    dolarController.text = "";
+    euroController.text = "";
   }
-  changedFieldEuro(){}
-  changedFieldReal(){}
+
+  void _changedFieldDolar(String text) {
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+    double dolar = double.parse(text);
+    realController.text = (dolar * this.dolar).toStringAsFixed(2);
+    euroController.text = (dolar * this.dolar / euro).toStringAsPrecision(2);
+  }
+
+  void _changedFieldEuro(String text) {
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+    double euro = double.parse(text);
+    realController.text = (euro * this.euro).toStringAsFixed(2);
+    dolarController.text = (euro * this.euro / dolar).toStringAsPrecision(2);
+  }
+
+  void _changedFieldReal(String text) {
+    if (text.isEmpty) {
+      _clearAll();
+      return;
+    }
+    double real = double.parse(text);
+    dolarController.text = (real / dolar).toStringAsFixed(2);
+    euroController.text = (real / euro).toStringAsPrecision(2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +90,7 @@ class _HomeState extends State<Home> {
       ),
       body: FutureBuilder<Map>(
         future: getData(),
-        builder: (contex, snapshot) {
+        builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
             case ConnectionState.waiting:
@@ -69,8 +99,8 @@ class _HomeState extends State<Home> {
               if (snapshot.hasError) {
                 return msgScreen("Loading Error ...");
               } else {
-                dolar = snapshot.data["results"]["currencies"]["USD"];
-                euro = snapshot.data["results"]["currencies"]["EUR"];
+                dolar = snapshot.data["results"]["currencies"]["USD"]["buy"];
+                euro = snapshot.data["results"]["currencies"]["EUR"]["buy"];
                 return SingleChildScrollView(
                   padding: EdgeInsets.all(15.0),
                   child: Column(
@@ -81,11 +111,14 @@ class _HomeState extends State<Home> {
                         size: 150.0,
                         color: Colors.amberAccent,
                       ),
-                      fieldScreen("Real", "R", realController, changedFieldReal()),
+                      fieldScreen(
+                          "Real", "R", realController, _changedFieldReal),
                       Divider(),
-                      fieldScreen("Dolar", "US", dolarController, changedFieldDolar()),
+                      fieldScreen(
+                          "Dolar", "US", dolarController, _changedFieldDolar),
                       Divider(),
-                      fieldScreen("Euro", "€", euroController, changedFieldEuro()),
+                      fieldScreen(
+                          "Euro", "€", euroController, _changedFieldEuro),
                     ],
                   ),
                 );
@@ -99,6 +132,7 @@ class _HomeState extends State<Home> {
 
 fieldScreen(String coin, String symbol, TextEditingController c, Function f) {
   return TextField(
+    controller: c,
     decoration: InputDecoration(
       labelText: "$coin",
       labelStyle: TextStyle(color: Colors.amberAccent),
@@ -107,7 +141,6 @@ fieldScreen(String coin, String symbol, TextEditingController c, Function f) {
     ),
     keyboardType: TextInputType.number,
     style: TextStyle(color: Colors.amberAccent, fontSize: 25.0),
-    controller: c,
     onChanged: f,
   );
 }
