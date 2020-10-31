@@ -2,7 +2,7 @@
 
 Learning FLUTTER for a future project
 
-# Calculator IMC
+# Coin Converter
 <img src="./images/coin_converter.jpeg" width="250" >
 
 # Calculator IMC
