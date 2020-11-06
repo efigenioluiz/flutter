@@ -22,8 +22,34 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("ToDoList"),
+        title: Text("Task List"),
         centerTitle: true,
+      ),
+      body: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.fromLTRB(17.0, 1.0, 7.0, 1.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "New Task",
+                      labelStyle: TextStyle(color: Colors.blueAccent),
+                    ),
+                  ),
+                ),
+                RaisedButton(
+                  color: Colors.blueAccent,
+                  child: Text("ADD"),
+                  textColor: Colors.black,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+
+          ),
+        ],
       ),
     );
   }
@@ -40,11 +66,11 @@ class _HomeState extends State<Home> {
   }
 
   Future<String> _readData() async {
-    try{
-      final file= await _getFile();
+    try {
+      final file = await _getFile();
       return file.readAsString();
-    }catch (e){
+    } catch (e) {
       print(e);
     }
-
+  }
 }
