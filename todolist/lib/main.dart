@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -16,7 +17,30 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    _readData().then((data) {
+      setState(() {
+        _toDoList = json.decode(data);
+      });
+    });
+  }
+
   List _toDoList = [];
+
+  final taskController = TextEditingController();
+
+  void _addToDo() {
+    setState(() {
+      Map<String, dynamic> newTask = Map();
+      newTask["title"] = taskController.text;
+      newTask["status"] = false;
+      taskController.text = "";
+      _toDoList.add(newTask);
+
+      _saveData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +57,7 @@ class _HomeState extends State<Home> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    controller: taskController,
                     decoration: InputDecoration(
                       labelText: "New Task",
                       labelStyle: TextStyle(color: Colors.blueAccent),
@@ -43,7 +68,7 @@ class _HomeState extends State<Home> {
                   color: Colors.blueAccent,
                   child: Text("ADD"),
                   textColor: Colors.black,
-                  onPressed: () {},
+                  onPressed: _addToDo,
                 ),
               ],
             ),
@@ -52,13 +77,38 @@ class _HomeState extends State<Home> {
             child: ListView.builder(
                 padding: EdgeInsets.only(top: 10.0),
                 itemCount: _toDoList.length,
-                itemBuilder: (context, index) {
-                  return CheckboxListTile(
-                    title: Text(_toDoList[index]),
-                  );
-                }),
+                itemBuilder: buildItem),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget buildItem(context, index) {
+    return Dismissible(
+      key: Key(DateTime.now().millisecond.toString()),
+      background: Container(
+        color: Colors.red,
+        child: Align(
+          alignment: Alignment(-0.9, 0.0),
+          child: Icon(Icons.delete,color: Colors.white,),
+        ),
+      ),
+      direction: DismissDirection.startToEnd,
+      child: CheckboxListTile(
+        title: Text(_toDoList[index]["title"]),
+        value: _toDoList[index]["status"],
+        secondary: CircleAvatar(
+          child: Icon(_toDoList[index]["status"]
+              ? Icons.check
+              : Icons.warning),
+        ),
+        onChanged: (c){
+          setState(() {
+            _toDoList[index]["status"]=c;
+            _saveData();
+          });
+        },
       ),
     );
   }
