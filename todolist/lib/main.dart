@@ -47,7 +47,16 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-
+          ),
+          Expanded(
+            child: ListView.builder(
+                padding: EdgeInsets.only(top: 10.0),
+                itemCount: _toDoList.length,
+                itemBuilder: (context, index) {
+                  return CheckboxListTile(
+                    title: Text(_toDoList[index]),
+                  );
+                }),
           ),
         ],
       ),
